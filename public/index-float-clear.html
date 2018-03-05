@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My First Web Page</title>
+    <style>
+      div {
+        position: static; /* static -> normal; static ignores top, left, right, and bottom. */
+        padding: 5px;
+        border: 1px solid blue;
+        display: inline-block;
+      }
+
+      body * {
+        border: 1px solid red;
+        padding: 50px;
+        margin: 20px; /* whichover one is bigger margin takes over the others in the top-bottom stack */
+      }
+
+      #box1, #box2 {
+        float: left;
+        width: 100px;
+        color: white;
+        background-color: blue;
+      }
+
+      #box3 {
+        clear: both; /* No contents on both left and right */
+      }
+      
+      
+    </style>
+  </head>
+  <body>
+    
+    <div>div 1</div>
+    <div>div 2</div>
+    <div>div 3</div>
+    
+    <span id="box1">span 1</span>
+    <span id="box2">span 2</span>
+    <span id="box3">span 3</span>
+    <span id="box4">span 4</span>
+
+  </body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My First Web Page</title>
+    <script>
+    
+      'use strict';
+
+      function newHireSalary(newSalary = 100) {
+        console.log(newSalary);
+        console.log('outer:', this);
+        const inner = () => {
+          console.log('inner:', this);
+        };
+
+        inner();
+      }
+
+      newHireSalary();
+
+      const parent = {
+        name: 'Parent',
+        amt: 3000,
+        address: {
+          city: "Saratoga"
+        }
+      };
+
+      const child = Object.create(parent);
+      child.name = 'Child';
+      
+      child.amt = 15;
+      console.log(child.amt);
+      delete child.amt;
+
+      console.log(child.amt);
+      child.address = {
+        city: 'paris'
+      }
+
+      console.log(parent.address);  
+      
+      class Person {
+
+        static create(fullName) {
+          return new Person(...fullName.split(' '));
+        }
+
+        constructor(firstName, lastName) {
+          this.firstName = firstName;
+          this.lastName = lastName;
+        }
+
+        getFullName() {
+          return this.lastName + ', ' + this.firstName;
+        }
+      }
+
+      class Student extends Person {
+        constructor(studentId, firsName, lastName) {
+          super(firsName, lastName);
+          this.studentId = studentId;
+        }
+
+        getRecordInfo() {
+          return this.studentId + ': ' + this.lastName + ', ' + this.firstName;
+        }
+      }
+
+      const student = new Student(1, 'Bob', 'Smith');
+      //console.log(student.getFullName());
+      ///console.log(student.getRecordInfo());
+      
+      // console.dir(Person.create('Bob Smith'));
+      
+      class Employee extends Person {
+        constructor(firstName, lastName) {
+          super(firstName, lastName);
+        }
+
+        getFullName() {
+          return super.getFullName() + '!!!';
+        }
+      }
+
+      let a = Object.freeze({
+        id: 1
+      });
+
+      // a = Object.assign({}, a, { id: 2 }); // {} + copy all `a` + override id to 2.
+      a = {
+        ...a,
+        id: 2,
+      };
+
+      console.log(a);
+
+      const person = {
+        firstName: "foo",
+        lastName: "bar",
+        age: 39,
+      };
+
+      const transform = ({ firstName, age }) => ({ firstName, age });
+      console.log(transform(person));
+
+      const {firstName, lastName} = person;
+
+      console.log(firstName);
+
+    </script>
+  </head>
+  <body>
+    
+    <div id="container">
+      <div>div 1</div>
+    </div>
+    
+    
+
+  </body>
+</html>

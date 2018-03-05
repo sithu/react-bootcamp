@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My First Web Page</title>
+    <style>
+
+      body {
+        font-size: 100%;
+      }
+
+      div {
+        border: 1px solid red;
+        margin: 20px;
+        padding: 50px;
+        width: 100px;
+        box-sizing: content-box; /* content + width */
+      }
+
+      h3 {
+        color: darkgray;
+      }
+      
+      p:last-of-type {
+        font-size: smaller;
+      }
+
+      [data-name='title'] {
+        color: pink;
+      }
+
+      .color {
+        font-family: Roboto, serif;
+        color: black;
+      }
+
+      li[data-selected] {
+        font-family: "Monaca";
+        font-weight: bold;
+        font-size: 20px;
+      }
+
+      /* sudo-class selector */
+      li:last-child {
+        color: darkmagenta
+      }
+
+      td {
+        padding: 10px;
+      }
+
+      /* sudo-class selector */
+      table tr:nth-child(odd) td{
+        background-color: rgb(76, 245, 237);
+        color: #fff;
+      }
+
+      table tr:nth-child(even) td{
+        background-color: lightgray;
+        color: #fff;
+      }
+
+      input:valid + span {
+        display: none;
+      }
+
+    </style>
+  </head>
+  <body>
+    <h3>Biography of <span data-name="title">Julie</span></h3>
+    
+    <div>box</div>
+
+    <table>
+      <tbody>
+        <tr>
+          <td>Name:</td>
+          <td>Julie Chen</td>
+        </tr>
+        <tr>
+          <td>Birthday:</td>
+          <td>June 19, 1995</td>
+        </tr>
+        <tr>
+          <td>Team:</td>
+          <td>Payroll - HR Benefits</td>
+        </tr>
+        <tr>
+          <td>Duration:</td>
+          <td>6 months</td>
+        </tr>
+        <tr>
+          <td>Last School you attended:</td>
+          <td>UC Berkeley</td>
+        </tr>
+        <tr>
+          <td>3 Interesting Things</td>
+          <td>
+            <ul class="color">
+              <li>Eats chicken and eggs together</li>
+              <li data-selected>Knitting</li>
+              <li>Recent car crash (.﹒︣︿﹒︣.)</li>
+            </ul>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>Comments:</p>
+    <input type="text" required value=""/>
+    <span>Field is required.</span>
+    
+  </body>
+</html>

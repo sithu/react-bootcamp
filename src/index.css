@@ -1,0 +1,28 @@
+body {
+  margin: 0;
+  padding: 0;
+  margin-left: 30px;
+  font-family: sans-serif;
+}
+
+td {
+  padding: 10px;
+  border: 1px solid darkgray;
+}
+
+table {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+thead {
+  color: white;
+  background: gray;
+}
+
+label {
+  padding: 10px;
+  margin-right: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
