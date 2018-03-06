@@ -42,10 +42,10 @@ const reducer = (state={ result: 0, log: [] }, action) => {
                 log: state.log.concat({ op: '/', val: action.value }),
             };
         case 'DELETE':
-        return {
-            ...state, 
-            log: [],
-        };
+            return {
+                ...state, 
+                log: [],
+            };
         default: return state;
     }
 };
@@ -172,21 +172,17 @@ class LogTable extends React.Component {
     }
 }
 
-const mapStateToProps = state => {
-    return { result: state.result, log: state.log };
-}
+// const mapStateToProps = ({ result, log }) => ({ result, log });
 
-const mapDispatchToProps = dispatch => {
-    return  bindActionCreators({
-        add: createAddAction,
-        subtract: createSubtractAction,
-        multiply: createMultiplyAction,
-        divide: createDivAction,
-        delete: createDeleteAction,
-    }, dispatch);
-}
+const mapDispatchToProps = dispatch => bindActionCreators({
+    add: createAddAction,
+    subtract: createSubtractAction,
+    multiply: createMultiplyAction,
+    divide: createDivAction,
+    delete: createDeleteAction,
+}, dispatch);
 
-const createContainer = connect(mapStateToProps, mapDispatchToProps);
+const createContainer = connect(({ result, log }) => ({ result, log }), mapDispatchToProps);
 
 const CalculatorToolContainer = createContainer(CalculatorTool);
 
