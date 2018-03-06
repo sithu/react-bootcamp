@@ -2,7 +2,6 @@ import * as React from 'react';
 
 export class CarEditView extends React.Component {
     constructor(props) {
-        console.log("constructor")
         super(props);
         const {car} = props;
         this.state = {
