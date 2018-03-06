@@ -7,11 +7,7 @@ import thunk from 'redux-thunk';
 
 const reducer = (state = { colors: [] }, action) => {
     switch(action.type) {
-        case 'REFRESH_REQUEST': return state;
         case 'REFRESH_DONE': return { ...state, colors: action.colors };
-        case 'DELETE_DONE': return state;
-        case 'INSERT_REQUEST': return state;
-        case 'INSERT_DONE': return state;
         default: return state;
     }
 };
