@@ -9,6 +9,7 @@ const reducer = (state = { colors: [] }, action) => {
     switch(action.type) {
         case 'REFRESH_REQUEST': return state;
         case 'REFRESH_DONE': return { ...state, colors: action.colors };
+        case 'DELETE_DONE': return state;
         case 'INSERT_REQUEST': return state;
         case 'INSERT_DONE': return state;
         default: return state;
@@ -34,7 +35,20 @@ const refresh = () => {
             .then(colors => dispatch(createRefreshDoneAction(colors)));
     }
 }
-const print = console.log;
+
+const createDeleteRequestAction = () => ({
+    type: 'DELETE_REQUEST',
+});
+
+const deleteColor = (id) => {
+    return dispatch => {
+        dispatch(createDeleteRequestAction());
+        return fetch('http://localhost:4000/colors/' + id, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' }})
+            .then(() => refresh()(dispatch));
+    }
+}
 
 const createInsertRequestAction = () => ({
     type: 'INSERT_REQUEST',
@@ -59,8 +73,14 @@ const insert = color => {
     };
 }
 
+const ColorList = props => {
+    return props.colors.map( c => { 
+        return <li key={c.id}>{c.name}<button type="button" onClick={ () => props.deleteColor(c.id) } >Delete</button></li>
+    });
+};
+
 const ColorTool = props => <div>
-    <ul>{props.colors.map( c => <li key={c.id}>{c.name}</li>)}</ul>
+    <ColorList colors={props.colors} deleteColor={props.deleteColor} />
     <button type="button" onClick={ () => props.refresh() }>Refresh</button>
     <form>
         <div>Name: <input type="text" defaultValue="" ref={i => this.n = i} /></div>
@@ -73,7 +93,7 @@ const ColorTool = props => <div>
 
 const ColorToolContainer = connect(
     ({ colors }) => ({ colors }),
-    dispatch => bindActionCreators({ refresh, insert }, dispatch)
+    dispatch => bindActionCreators({ refresh, insert, deleteColor }, dispatch)
 )(ColorTool);
 
 ReactDOM.render(<Provider store={appStore}>
