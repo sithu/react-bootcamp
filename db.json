@@ -1,0 +1,34 @@
+{
+  "colors": [
+    {
+      "id": 1,
+      "name": "red",
+      "hexcode": "#ff0000"
+    },
+    {
+      "id": 2,
+      "name": "black",
+      "hexcode": "#ff0000"
+    },
+    {
+      "id": 3,
+      "name": "blue",
+      "hexcode": "#ff0000"
+    },
+    {
+      "name": "Hot Pink",
+      "hexCode": "#ff40ff",
+      "id": 4
+    },
+    {
+      "name": "a",
+      "hexCode": "#c0c0c0",
+      "id": 5
+    },
+    {
+      "name": "Sea",
+      "hexCode": "#00fa92",
+      "id": 6
+    }
+  ]
+}

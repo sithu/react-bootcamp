@@ -1,189 +1,83 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import * as PropTypes from 'prop-types';
-import { createStore, bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import { createStore, bindActionCreators, applyMiddleware } from 'redux';
+import { connect, Provider } from 'react-redux';
+import thunk from 'redux-thunk';
 
-/**
- * The Reducer fun must be a pure function. 
- * 1. The only data the pure funciton will receive from parameters.
- * 2. The parameters never be modified without exception.
- * 3. The pure function cannot cause no side effect.
- * 4. The only return output must be the actual pure function.
- * 
- * When you work with redux, the state is always immutable. You will never mutate the state object.
- * @param {*} state 
- * @param {*} action 
- */
-const reducer = (state={ result: 0, log: [] }, action) => {
-    switch (action.type) {
-        case 'ADD': 
-            return {
-                ...state, 
-                result: state.result + action.value,
-                log: state.log.concat({ op: '+', val: action.value }),
-            };
-        case 'SUBTRACT':
-            return {
-                ...state, 
-                result: state.result - action.value,
-                log: state.log.concat({ op: '-', val: action.value }),
-            };
-        case 'MULT':
-            return {
-                ...state, 
-                result: state.result * action.value,
-                log: state.log.concat({ op: '*', val: action.value }),
-            };
-        case 'DIV':
-            return {
-                ...state, 
-                result: state.result / action.value,
-                log: state.log.concat({ op: '/', val: action.value }),
-            };
-        case 'DELETE':
-            return {
-                ...state, 
-                log: [],
-            };
+const reducer = (state = { colors: [] }, action) => {
+    switch(action.type) {
+        case 'REFRESH_REQUEST': return state;
+        case 'REFRESH_DONE': return { ...state, colors: action.colors };
+        case 'INSERT_REQUEST': return state;
+        case 'INSERT_DONE': return state;
         default: return state;
     }
 };
 
-const store = createStore(reducer);
+const appStore= createStore(reducer, applyMiddleware(thunk));
 
-const createAddAction = value => ({ type: 'ADD', value });
-const createSubtractAction = value => ({ type: 'SUBTRACT', value });
-const createMultiplyAction = value => ({ type: 'MULT', value });
-const createDivAction = value => ({ type: 'DIV', value });
-const createDeleteAction = () => ({ type: 'DELETE' });
+const createRefreshRequestAction = () => ({
+    type: 'REFRESH_REQUEST',
+});
 
-/*
-const bindActionCreators = (actions, dispatch) => {
-    const actionFns = {};
-    Object.keys(actions).forEach(action => {
-        actionFns[action] = value => dispatch(actions[action](value));
-    });
-    return actionFns;
-};
-*/
-/*
-const connect = (mapStateToPropsFn, mapDispatchToPropsFn) => {
-    
-    return (PresentationalComponent) => {
-        
-        return class ContainerComponent extends React.Component {
-            
-            static propTypes = {
-                store: PropTypes.shape({
-                    dispatch: PropTypes.func.isRequired,
-                    getState: PropTypes.func.isRequired,
-                    subscribe: PropTypes.func.isRequired,
-                }),
-            };
+const createRefreshDoneAction = colors => ({
+    type: 'REFRESH_DONE',
+    colors,
+});
 
-            constructor(props) {
-                super(props);
-                this.dispatchProps = mapDispatchToPropsFn(props.store);
-            }
+const refresh = () => {
+    return dispatch => {
+        dispatch(createRefreshRequestAction());
+        return fetch('http://localhost:4000/colors')
+            .then(res => res.json())
+            .then(colors => dispatch(createRefreshDoneAction(colors)));
+    }
+}
+const print = console.log;
 
-            componentDidMount() {
-                this.unsubscribe = this.props.store.subscribe(() => {
-                    this.forceUpdate(); // This is the special funciton to re-render the component.
-                });
-            }
+const createInsertRequestAction = () => ({
+    type: 'INSERT_REQUEST',
+});
 
-            componentWillUnmount() {
-                if(this.unsubscribe) this.unsubscribe();
-            }
+const createInsertDoneAction = color => ({
+    type: 'INSERT_DONE',
+    color,
+});
 
-            render() {
-                const stateProps = mapStateToPropsFn(this.props.store.getState());
+const insert = color => {
 
-                return <PresentationalComponent {...this.dispatchProps} {...stateProps} />;
-            }
+    return dispatch => {
+        dispatch(createInsertRequestAction(color))
 
-        };
-
+        return fetch('http://localhost:4000/colors', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(color)
+            })
+            .then(() => refresh()(dispatch));
     };
-
-};
-*/
-
-class CalculatorTool extends React.Component {
-    static propTypes = {
-        result: PropTypes.number.isRequired,
-        add: PropTypes.func.isRequired,
-        subtract: PropTypes.func.isRequired,
-        multiply: PropTypes.func.isRequired,
-        divide: PropTypes.func.isRequired,
-        delete: PropTypes.func.isRequired,
-    }
-
-    static defaultProps = {
-        result: 0,
-    }
-
-    componentDidMount() {
-        if (this.numInput) {
-            this.numInput.focus();
-        }
-    }
-
-    render() {
-        return (
-            <div>
-                <form>
-                    <div>Result: {this.props.result}</div>
-                    <div>
-                        <label htmlFor="input">Input:</label>
-                        <input name="input" type="number" defaultValue={0} ref={ input => this.numInput = input } />
-                    </div>
-                    <button type="button" onClick={ () => this.props.add(Number(this.numInput.value)) }>+</button>
-                    <button type="button" onClick={ () => this.props.subtract(Number(this.numInput.value)) }>-</button>
-                    <button type="button" onClick={ () => this.props.multiply(Number(this.numInput.value)) }>*</button>
-                    <button type="button" onClick={ () => this.props.divide(Number(this.numInput.value)) }>/</button>
-                </form>
-                <br />
-                <LogTable log={this.props.log}/>
-                <button type="button" onClick={ () => this.props.delete() }>Clear Logs</button>
-            </div>
-        );
-    }
 }
 
-class LogTable extends React.Component {
-    render() {
-        const rows = this.props.log.map( log => {
-            return <tr key={log}><td>{log.op}</td><td>{log.val}</td></tr>;
-        });
-        return (
-            <table>
-                <thead>
-                    <tr>
-                        <td>Operator</td><td>Value</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    {rows}
-                </tbody>
-            </table>
-        );
-    }
-}
+const ColorTool = props => <div>
+    <ul>{props.colors.map( c => <li key={c.id}>{c.name}</li>)}</ul>
+    <button type="button" onClick={ () => props.refresh() }>Refresh</button>
+    <form>
+        <div>Name: <input type="text" defaultValue="" ref={i => this.n = i} /></div>
+        <div>HexCode: <input type="color" defaultValue="#000000" ref={i => this.h = i} /></div>
+        <button type="button" onClick={ 
+            () => props.insert({name: this.n.value, hexCode: this.h.value})
+            }>Add Color</button>
+    </form>
+</div>
 
-// const mapStateToProps = ({ result, log }) => ({ result, log });
+const ColorToolContainer = connect(
+    ({ colors }) => ({ colors }),
+    dispatch => bindActionCreators({ refresh, insert }, dispatch)
+)(ColorTool);
 
-const mapDispatchToProps = dispatch => bindActionCreators({
-    add: createAddAction,
-    subtract: createSubtractAction,
-    multiply: createMultiplyAction,
-    divide: createDivAction,
-    delete: createDeleteAction,
-}, dispatch);
+ReactDOM.render(<Provider store={appStore}>
+    <ColorToolContainer />
+</Provider>, document.querySelector('main'));
 
-const createContainer = connect(({ result, log }) => ({ result, log }), mapDispatchToProps);
-
-const CalculatorToolContainer = createContainer(CalculatorTool);
-
-ReactDOM.render(<CalculatorToolContainer store={store} />, document.querySelector('main'));
+refresh()(appStore.dispatch);
