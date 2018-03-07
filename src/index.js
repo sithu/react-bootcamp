@@ -8,6 +8,7 @@ import { appStore } from './car-store';
 import { CarTool } from './components/car-tool-redux';
 import { insert, refresh, update, deleteCar } from './car-actions';
 
+
 const CarToolContainer = connect(
     ({ cars }) => ({ cars }),
     dispatch => bindActionCreators({ refresh, insert, update, deleteCar }, dispatch)

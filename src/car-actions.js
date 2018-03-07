@@ -40,7 +40,7 @@ export const update = car => {
     return dispatch => {
         dispatch(createInsertRequestAction(car))
 
-        return fetch('http://localhost:4000/cars/' + car.id, {
+        return fetch('http://localhost:4000/cars/' + encodeURIComponent(car.id), {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(car)
@@ -52,7 +52,7 @@ export const update = car => {
 export const deleteCar = (car) => {
     return dispatch => {
         dispatch(createDeleteRequestAction());
-        return fetch('http://localhost:4000/cars/' + car.id, {
+        return fetch('http://localhost:4000/cars/' + encodeURIComponent(car.id), {
             method: 'DELETE' })
             .then(() => refresh()(dispatch));
     }
