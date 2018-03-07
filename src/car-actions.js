@@ -49,10 +49,10 @@ export const update = car => {
     };
 }
 
-export const deleteCar = (id) => {
+export const deleteCar = (car) => {
     return dispatch => {
         dispatch(createDeleteRequestAction());
-        return fetch('http://localhost:4000/cars/' + id, {
+        return fetch('http://localhost:4000/cars/' + car.id, {
             method: 'DELETE' })
             .then(() => refresh()(dispatch));
     }
